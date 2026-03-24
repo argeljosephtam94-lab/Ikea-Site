@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FFD700; /* Bright Yellow */
+  --color-secondary: #E31837; /* Red */
+  --color-accent: #8B0000; /* Dark Red / Maroon */
+  
+  --font-rounded: "Quicksand", "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-rounded bg-white text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-secondary text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-accent transition-colors;
+  }
+  .card-yellow {
+    @apply bg-primary/10 border-2 border-primary rounded-2xl p-4 shadow-sm;
+  }
+}
