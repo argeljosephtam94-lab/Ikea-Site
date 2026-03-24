@@ -1,25 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #FFD700; /* Bright Yellow */
-  --color-secondary: #E31837; /* Red */
-  --color-accent: #8B0000; /* Dark Red / Maroon */
+  --color-primary: #0F3D2E; /* Deeper Forest Green */
+  --color-secondary: #E99696; /* Muted Coral */
+  --color-accent: #121A1A; /* Near Black Navy */
+  --color-paper: #F8F5F2; /* Warm Editorial Paper */
   
   --font-rounded: "Quicksand", "Inter", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
 }
 
 @layer base {
   body {
-    @apply font-rounded bg-white text-gray-900;
+    @apply font-rounded bg-paper text-accent antialiased;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-secondary text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-accent transition-colors;
+    @apply bg-primary text-paper px-10 py-4 rounded-full font-bold shadow-xl hover:bg-accent transition-all duration-500 hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs;
   }
-  .card-yellow {
-    @apply bg-primary/10 border-2 border-primary rounded-2xl p-4 shadow-sm;
+  .btn-secondary {
+    @apply border border-primary text-primary px-10 py-4 rounded-full font-bold hover:bg-primary hover:text-paper transition-all duration-500 hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs;
+  }
+  .card-custom {
+    @apply bg-white border border-primary/5 rounded-none p-8 shadow-sm hover:shadow-2xl transition-all duration-700 relative overflow-hidden;
+  }
+  .editorial-title {
+    @apply font-serif italic text-7xl md:text-9xl leading-[0.8] tracking-tighter;
+  }
+  .micro-label {
+    @apply text-[10px] font-bold uppercase tracking-[0.3em] text-accent/50;
+  }
+  .vertical-text {
+    @apply [writing-mode:vertical-rl] rotate-180 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/30;
   }
 }

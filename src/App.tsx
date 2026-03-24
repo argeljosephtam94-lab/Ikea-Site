@@ -48,44 +48,45 @@ const Navbar = ({
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-primary shadow-md">
+    <nav className="sticky top-0 z-50 bg-paper/90 backdrop-blur-xl border-b border-primary/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 items-center">
+        <div className="flex justify-between h-24 items-center">
           {/* Logo */}
           <div 
-            className="flex-shrink-0 flex items-center cursor-pointer"
+            className="flex-shrink-0 flex items-center cursor-pointer group"
             onClick={() => setActiveSection('home')}
           >
-            <div className="bg-secondary p-2 rounded-lg mr-2 shadow-inner">
-              <Cake className="text-primary w-8 h-8" />
-            </div>
-            <div>
-              <h1 className="text-accent font-black text-xl leading-none uppercase tracking-tighter">IKEA</h1>
-              <p className="text-secondary font-bold text-xs leading-none">Cakes & Snacks</p>
+            <div className="flex flex-col items-start">
+              <span className="font-serif italic text-3xl md:text-4xl text-primary leading-none tracking-tighter lowercase">Ikea</span>
+              <span className="micro-label -mt-1">Cakes & Snacks</span>
             </div>
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex space-x-8 items-center">
+          <div className="hidden md:flex space-x-12 items-center">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => setActiveSection(link.id)}
                 className={cn(
-                  "text-accent font-bold hover:text-secondary transition-colors cursor-pointer",
-                  activeSection === link.id ? "border-b-2 border-secondary" : ""
+                  "text-accent/60 font-bold text-[10px] uppercase tracking-[0.3em] hover:text-primary transition-all cursor-pointer relative group",
+                  activeSection === link.id ? "text-primary" : ""
                 )}
               >
                 {link.name}
+                <span className={cn(
+                  "absolute -bottom-2 left-0 w-0 h-px bg-primary transition-all duration-500 group-hover:w-full",
+                  activeSection === link.id ? "w-full" : ""
+                )} />
               </button>
             ))}
             <button 
               onClick={onCartOpen}
-              className="relative p-2 bg-secondary text-white rounded-full hover:bg-accent transition-colors cursor-pointer"
+              className="relative p-2 text-primary hover:text-secondary transition-all cursor-pointer"
             >
-              <ShoppingBag size={24} />
+              <ShoppingBag size={20} strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-secondary text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-secondary">
+                <span className="absolute -top-1 -right-1 bg-primary text-paper text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full">
                   {cartCount}
                 </span>
               )}
@@ -96,16 +97,16 @@ const Navbar = ({
           <div className="md:hidden flex items-center space-x-4">
             <button 
               onClick={onCartOpen}
-              className="relative p-2 bg-secondary text-white rounded-full"
+              className="relative p-2 bg-primary text-white rounded-full"
             >
               <ShoppingBag size={20} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-secondary text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-secondary">
+                <span className="absolute -top-1 -right-1 bg-secondary text-primary text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-primary">
                   {cartCount}
                 </span>
               )}
             </button>
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-accent">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-primary">
               {isMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
             </button>
           </div>
@@ -119,7 +120,7 @@ const Navbar = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-primary border-t border-primary/20 overflow-hidden"
+            className="md:hidden bg-secondary border-t border-primary/10 overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               {navLinks.map((link) => (
@@ -130,8 +131,8 @@ const Navbar = ({
                     setIsMenuOpen(false);
                   }}
                   className={cn(
-                    "block w-full text-left px-3 py-4 text-accent font-bold text-lg border-b border-primary/10",
-                    activeSection === link.id ? "text-secondary pl-5" : ""
+                    "block w-full text-left px-3 py-4 text-primary font-bold text-lg border-b border-primary/5",
+                    activeSection === link.id ? "text-accent pl-5" : ""
                   )}
                 >
                   {link.name}
@@ -171,67 +172,79 @@ const CartDrawer = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 z-[60]"
+            className="fixed inset-0 bg-accent/40 backdrop-blur-sm z-[60]"
           />
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-[70] shadow-2xl flex flex-col"
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-paper z-[70] shadow-2xl flex flex-col"
           >
-            <div className="p-4 bg-primary flex justify-between items-center">
-              <h2 className="text-accent font-black text-xl uppercase">Your Basket</h2>
-              <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full cursor-pointer">
-                <X size={24} />
+            <div className="p-8 border-b border-primary/5 flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-serif italic text-primary">Your Selection</h2>
+                <p className="micro-label mt-1">{cartItems.length} Items</p>
+              </div>
+              <button onClick={onClose} className="p-2 hover:bg-primary/5 rounded-full transition-colors cursor-pointer">
+                <X size={20} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-8 space-y-8">
               {cartItems.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
-                  <ShoppingBag size={64} strokeWidth={1} />
-                  <p className="font-medium">Your basket is empty</p>
+                <div className="h-full flex flex-col items-center justify-center text-accent/30 space-y-6">
+                  <ShoppingBag size={48} strokeWidth={1} />
+                  <p className="font-serif italic text-xl">The basket is empty</p>
                   <button 
                     onClick={onClose}
-                    className="text-secondary font-bold underline cursor-pointer"
+                    className="micro-label text-primary underline underline-offset-4 cursor-pointer"
                   >
-                    Start shopping
+                    Continue Browsing
                   </button>
                 </div>
               ) : (
                 cartItems.map((entry) => (
-                  <div key={entry.item.id} className="flex space-x-4 border-b pb-4">
-                    <img 
-                      src={entry.item.image} 
-                      alt={entry.item.name} 
-                      className="w-20 h-20 object-cover rounded-lg"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-bold text-accent">{entry.item.name}</h3>
-                      <p className="text-secondary font-bold">₱{entry.item.price}</p>
-                      <div className="flex items-center space-x-4 mt-2">
-                        <div className="flex items-center border rounded-full px-2 py-1">
+                  <div key={entry.item.id} className="flex gap-6 group">
+                    <div className="w-24 h-24 overflow-hidden flex-shrink-0">
+                      <img 
+                        src={entry.item.image} 
+                        alt={entry.item.name} 
+                        className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-serif italic text-xl text-primary">{entry.item.name}</h3>
                           <button 
-                            onClick={() => onUpdateQuantity(entry.item.id, -1)}
-                            className="p-1 hover:text-secondary cursor-pointer"
+                            onClick={() => onRemove(entry.item.id)}
+                            className="text-accent/20 hover:text-red-500 transition-colors"
                           >
-                            <Minus size={16} />
-                          </button>
-                          <span className="px-3 font-bold">{entry.quantity}</span>
-                          <button 
-                            onClick={() => onUpdateQuantity(entry.item.id, 1)}
-                            className="p-1 hover:text-secondary cursor-pointer"
-                          >
-                            <Plus size={16} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
-                        <button 
-                          onClick={() => onRemove(entry.item.id)}
-                          className="text-gray-400 hover:text-red-600 cursor-pointer"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                        <p className="text-xs text-accent/40 mt-1">₱{entry.item.price}</p>
+                      </div>
+                      
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center space-x-4 border border-primary/10 px-3 py-1">
+                          <button 
+                            onClick={() => onUpdateQuantity(entry.item.id, -1)}
+                            className="text-accent/40 hover:text-primary transition-colors"
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <span className="text-xs font-bold w-4 text-center">{entry.quantity}</span>
+                          <button 
+                            onClick={() => onUpdateQuantity(entry.item.id, 1)}
+                            className="text-accent/40 hover:text-primary transition-colors"
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+                        <span className="font-bold text-sm">₱{(entry.item.price * entry.quantity).toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -240,16 +253,16 @@ const CartDrawer = ({
             </div>
 
             {cartItems.length > 0 && (
-              <div className="p-6 border-t space-y-4">
-                <div className="flex justify-between items-center text-xl font-black text-accent">
-                  <span>Total</span>
-                  <span>₱{total.toLocaleString()}</span>
+              <div className="p-8 bg-white border-t border-primary/5 space-y-6">
+                <div className="flex justify-between items-end">
+                  <span className="micro-label">Subtotal</span>
+                  <span className="text-3xl font-serif italic text-primary">₱{total.toLocaleString()}</span>
                 </div>
                 <button 
                   onClick={onCheckout}
-                  className="w-full bg-secondary text-white py-4 rounded-full font-black text-lg shadow-lg hover:bg-accent transition-all uppercase tracking-wider cursor-pointer"
+                  className="btn-primary w-full py-5"
                 >
-                  Checkout Now
+                  Proceed to Checkout
                 </button>
               </div>
             )}
@@ -261,67 +274,74 @@ const CartDrawer = ({
 };
 
 const Hero = ({ onAction }: { onAction: () => void }) => (
-  <section className="relative bg-primary overflow-hidden">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24 flex flex-col md:flex-row items-center">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="md:w-1/2 text-center md:text-left z-10"
-      >
-        <div className="inline-block bg-secondary text-white px-4 py-1 rounded-full text-sm font-bold mb-6 animate-bounce">
-          🎂 Freshly Baked Daily!
-        </div>
-        <h1 className="text-4xl md:text-7xl font-black text-accent leading-tight mb-6">
-          Ormoc's Favorite <br />
-          <span className="text-secondary">Cakes & Snacks</span>
-        </h1>
-        <p className="text-lg text-accent/80 font-medium mb-8 max-w-lg">
-          Serving fresh cakes, Filipino favorites, and desserts loved by locals for years. 
-          Taste the tradition in every bite!
-        </p>
-        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
-          <button 
-            onClick={onAction}
-            className="bg-secondary text-white px-10 py-4 rounded-full font-black text-lg shadow-xl hover:scale-105 transition-transform uppercase cursor-pointer"
-          >
-            Order Now
-          </button>
-          <button 
-            onClick={onAction}
-            className="bg-white text-accent border-2 border-accent px-10 py-4 rounded-full font-black text-lg hover:bg-accent hover:text-white transition-all uppercase cursor-pointer"
-          >
-            View Menu
-          </button>
-        </div>
-      </motion.div>
-      
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="md:w-1/2 mt-12 md:mt-0 relative"
-      >
-        <div className="absolute inset-0 bg-secondary/20 rounded-full blur-3xl" />
-        <img 
-          src="https://picsum.photos/seed/bakery-hero/800/800" 
-          alt="Featured Chocolate Cake" 
-          className="relative rounded-3xl shadow-2xl border-8 border-white transform rotate-3 hover:rotate-0 transition-transform duration-500"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border-2 border-primary hidden md:block">
-          <div className="flex items-center space-x-2">
-            <div className="flex text-yellow-400">
-              {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
-            </div>
-            <span className="font-bold text-accent">5,000+ Happy Locals</span>
-          </div>
-        </div>
-      </motion.div>
+  <section className="relative min-h-screen flex items-center overflow-hidden bg-paper">
+    {/* Vertical Rail Text */}
+    <div className="absolute left-8 top-1/2 -translate-y-1/2 hidden xl:block">
+      <span className="vertical-text">Ormoc's Finest Artisanal Bakery • Est. 1994</span>
     </div>
-    
-    {/* Decorative elements */}
-    <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full -mr-32 -mt-32" />
-    <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full -ml-48 -mb-48" />
+
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="lg:col-span-7"
+        >
+          <span className="micro-label mb-6 block">A Legacy of Taste</span>
+          <h1 className="editorial-title text-primary mb-12">
+            Crafting <br />
+            <span className="text-secondary not-italic font-sans font-black uppercase tracking-tighter text-6xl md:text-8xl block mt-4">Sweet Memories</span>
+          </h1>
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 mb-16">
+            <div className="h-px w-24 bg-primary/20 hidden sm:block" />
+            <p className="text-lg text-accent/60 font-medium max-w-md leading-relaxed">
+              From our signature chocolate fudge to Filipino comfort classics, 
+              we've been the silent guest at Ormoc's celebrations for over three decades.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-6">
+            <button 
+              onClick={onAction}
+              className="btn-primary"
+            >
+              Order Online
+            </button>
+            <button 
+              onClick={onAction}
+              className="btn-secondary"
+            >
+              Explore Menu
+            </button>
+          </div>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="lg:col-span-5 relative"
+        >
+          <div className="relative aspect-[3/4] overflow-hidden group">
+            <img 
+              src="https://picsum.photos/seed/bakery-hero-luxury/1200/1600" 
+              alt="Signature Cake" 
+              className="w-full h-full object-cover grayscale-[0.2] group-hover:scale-105 transition-transform duration-1000"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 border-[20px] border-paper/10" />
+            
+            {/* Floating Detail */}
+            <div className="absolute bottom-0 left-0 bg-primary p-8 text-paper">
+              <span className="micro-label text-paper/60 block mb-2">Signature</span>
+              <p className="font-serif italic text-2xl">Chocolate Fudge</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
   </section>
 );
 
@@ -329,40 +349,47 @@ const FeaturedItems = ({ onAddToCart }: { onAddToCart: (item: MenuItem) => void 
   const popularItems = useMemo(() => MENU_ITEMS.filter(item => item.popular), []);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-5xl font-black text-accent uppercase tracking-tight">Most Ordered</h2>
-          <div className="w-24 h-2 bg-primary mx-auto mt-4 rounded-full" />
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div className="max-w-xl">
+            <span className="micro-label mb-4 block">The Selection</span>
+            <h2 className="text-5xl md:text-7xl font-serif italic text-primary leading-none">Signature Collection</h2>
+          </div>
+          <p className="text-accent/50 max-w-xs text-sm leading-relaxed">
+            A curated selection of our most beloved creations, crafted with artisanal precision.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-primary/10 border border-primary/10">
           {popularItems.map((item) => (
             <motion.div 
               key={item.id}
-              whileHover={{ y: -10 }}
-              className="card-yellow flex flex-col h-full"
+              className="bg-white p-8 group flex flex-col h-full relative"
             >
-              <div className="relative mb-4 overflow-hidden rounded-xl">
+              <div className="relative mb-8 overflow-hidden aspect-[4/5]">
                 <img 
                   src={item.image} 
                   alt={item.name} 
-                  className="w-full h-48 object-cover hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute top-2 right-2 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">
-                  Best Seller
-                </div>
+                <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              <h3 className="text-lg font-black text-accent mb-1">{item.name}</h3>
-              <p className="text-sm text-gray-600 mb-4 flex-1">{item.description}</p>
-              <div className="flex items-center justify-between mt-auto">
-                <span className="text-xl font-black text-secondary">₱{item.price}</span>
+              
+              <div className="flex-1">
+                <span className="micro-label text-secondary mb-2 block">Best Seller</span>
+                <h3 className="text-2xl font-serif italic text-primary mb-3">{item.name}</h3>
+                <p className="text-xs text-accent/50 leading-relaxed mb-8 line-clamp-3">{item.description}</p>
+              </div>
+
+              <div className="flex items-center justify-between pt-6 border-t border-primary/5">
+                <span className="text-xl font-bold text-primary">₱{item.price}</span>
                 <button 
                   onClick={() => onAddToCart(item)}
-                  className="bg-secondary text-white p-2 rounded-full hover:bg-accent transition-colors cursor-pointer"
+                  className="text-[10px] font-bold uppercase tracking-widest text-primary hover:text-secondary transition-colors cursor-pointer"
                 >
-                  <Plus size={20} />
+                  Add to Basket
                 </button>
               </div>
             </motion.div>
@@ -383,68 +410,67 @@ const MenuSection = ({ onAddToCart }: { onAddToCart: (item: MenuItem) => void })
   );
 
   return (
-    <section id="menu" className="py-16 bg-gray-50">
+    <section id="menu" className="py-24 bg-paper">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-5xl font-black text-accent uppercase">Full Menu</h2>
-          <p className="text-gray-500 mt-2">Authentic Filipino flavors for every craving</p>
+        <div className="flex flex-col items-center text-center mb-20">
+          <span className="micro-label mb-4">The Menu</span>
+          <h2 className="text-5xl md:text-7xl font-serif italic text-primary">Sweet & Savory</h2>
         </div>
 
         {/* Category Tabs */}
-        <div className="flex overflow-x-auto pb-4 mb-8 space-x-4 no-scrollbar justify-start md:justify-center">
+        <div className="flex overflow-x-auto pb-8 mb-16 space-x-12 no-scrollbar justify-start md:justify-center border-b border-primary/10">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={cn(
-                "px-6 py-3 rounded-full font-bold whitespace-nowrap transition-all flex items-center space-x-2 cursor-pointer",
+                "pb-4 font-bold uppercase tracking-[0.2em] text-[10px] transition-all relative",
                 activeCategory === cat 
-                  ? "bg-secondary text-white shadow-lg scale-105" 
-                  : "bg-white text-accent border-2 border-primary hover:bg-primary/20"
+                  ? "text-primary" 
+                  : "text-accent/30 hover:text-accent/60"
               )}
             >
-              {cat === 'Cakes' && <Cake size={18} />}
-              {cat === 'Desserts' && <IceCream size={18} />}
-              {cat === 'Meals' && <Utensils size={18} />}
-              {cat === 'Snacks' && <Star size={18} />}
-              {cat === 'Drinks' && <Coffee size={18} />}
-              <span>{cat}</span>
+              {cat}
+              {activeCategory === cat && (
+                <motion.div 
+                  layoutId="activeCategory"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                />
+              )}
             </button>
           ))}
         </div>
 
         {/* Menu Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           <AnimatePresence mode="wait">
             {filteredItems.map((item) => (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex space-x-4 hover:shadow-md transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="group flex flex-col"
               >
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className="w-24 h-24 object-cover rounded-xl flex-shrink-0"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-black text-accent leading-tight">{item.name}</h4>
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">{item.description}</p>
-                  </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="font-black text-secondary">₱{item.price}</span>
-                    <button 
-                      onClick={() => onAddToCart(item)}
-                      className="text-xs bg-primary text-accent font-bold px-3 py-1 rounded-full hover:bg-secondary hover:text-white transition-colors cursor-pointer"
-                    >
-                      Add to Basket
-                    </button>
-                  </div>
+                <div className="relative aspect-video overflow-hidden mb-6">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                  <button 
+                    onClick={() => onAddToCart(item)}
+                    className="absolute bottom-4 right-4 bg-primary text-paper p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0"
+                  >
+                    <Plus size={18} />
+                  </button>
                 </div>
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-serif italic text-2xl text-primary">{item.name}</h4>
+                  <span className="font-bold text-primary">₱{item.price}</span>
+                </div>
+                <p className="text-xs text-accent/50 leading-relaxed italic">{item.description}</p>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -464,110 +490,110 @@ const CustomCakeSection = () => {
   };
 
   return (
-    <section id="custom" className="py-16 bg-white">
+    <section id="custom" className="py-24 bg-paper">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-1/2">
-            <h2 className="text-3xl md:text-5xl font-black text-accent uppercase mb-6">Custom Cakes</h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Make your celebrations extra special with a personalized cake. 
-              Whether it's for a birthday, wedding, or anniversary, we'll bake your dream design!
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-start">
+          <div className="lg:col-span-5">
+            <span className="micro-label mb-4 block">Bespoke Baking</span>
+            <h2 className="text-5xl md:text-7xl font-serif italic text-primary mb-10 leading-none">Custom Masterpieces</h2>
+            <p className="text-xl text-accent/60 mb-12 leading-relaxed italic font-serif">
+              "Every celebration deserves a centerpiece as unique as the moment itself."
             </p>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="bg-primary p-3 rounded-full text-secondary">
-                  <CheckCircle2 size={24} />
-                </div>
-                <span className="font-bold text-accent">Choose your flavor & size</span>
+            
+            <div className="bg-primary text-paper p-10 relative overflow-hidden mb-12">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-paper/5 rounded-full -mr-16 -mt-16" />
+              <h4 className="font-serif italic text-2xl mb-6 flex items-center">
+                <X className="mr-3 text-secondary" size={24} />
+                Consultation Policy
+              </h4>
+              <p className="text-sm opacity-80 leading-relaxed font-medium">
+                To ensure the highest quality for your special day, we do not accept customized occasion cake orders over the phone. 
+                Please visit our main branch on-site for a consultation, downpayment, and to receive your claim stub.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center space-x-6">
+                <div className="h-px w-12 bg-primary/20" />
+                <span className="micro-label">Artisanal Craftsmanship</span>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="bg-primary p-3 rounded-full text-secondary">
-                  <CheckCircle2 size={24} />
-                </div>
-                <span className="font-bold text-accent">Upload your own design</span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="bg-primary p-3 rounded-full text-secondary">
-                  <CheckCircle2 size={24} />
-                </div>
-                <span className="font-bold text-accent">Pickup or Delivery in Ormoc</span>
+              <div className="flex items-center space-x-6">
+                <div className="h-px w-12 bg-primary/20" />
+                <span className="micro-label">Premium Ingredients Only</span>
               </div>
             </div>
           </div>
 
-          <div className="lg:w-1/2 w-full">
-            <div className="card-yellow p-8">
+          <div className="lg:col-span-7 w-full">
+            <div className="bg-white p-12 border border-primary/5 shadow-2xl relative">
               {isSubmitted ? (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-12"
+                  className="text-center py-20"
                 >
-                  <div className="bg-green-100 text-green-600 w-20 h-20 flex items-center justify-center rounded-full mx-auto mb-6">
-                    <CheckCircle2 size={48} />
+                  <div className="text-primary w-24 h-24 flex items-center justify-center rounded-full mx-auto mb-8 border border-primary/10">
+                    <CheckCircle2 size={48} strokeWidth={1} />
                   </div>
-                  <h3 className="text-2xl font-black text-accent mb-2">Order Received!</h3>
-                  <p className="text-gray-600">We'll contact you shortly to confirm your custom cake details.</p>
+                  <h3 className="text-3xl font-serif italic text-primary mb-4">Inquiry Received</h3>
+                  <p className="text-accent/50 max-w-xs mx-auto">Please visit our store to finalize your order with a consultation and downpayment.</p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-bold text-accent mb-1">Your Name</label>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="micro-label">Your Name</label>
                       <input 
                         required
                         type="text" 
-                        className="w-full p-3 rounded-xl border-2 border-primary focus:border-secondary outline-none"
+                        className="w-full py-4 border-b border-primary/10 focus:border-primary outline-none bg-transparent transition-colors font-serif italic text-xl"
                         placeholder="Juan Dela Cruz"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-bold text-accent mb-1">Phone Number</label>
+                    <div className="space-y-2">
+                      <label className="micro-label">Phone Number</label>
                       <input 
                         required
                         type="tel" 
-                        className="w-full p-3 rounded-xl border-2 border-primary focus:border-secondary outline-none"
-                        placeholder="0912 345 6789"
+                        className="w-full py-4 border-b border-primary/10 focus:border-primary outline-none bg-transparent transition-colors font-serif italic text-xl"
+                        placeholder="0968 649 7867"
                       />
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold text-accent mb-1">Celebration Date</label>
-                    <input 
-                      required
-                      type="date" 
-                      className="w-full p-3 rounded-xl border-2 border-primary focus:border-secondary outline-none"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="micro-label">Celebration Date</label>
+                      <input 
+                        required
+                        type="date" 
+                        className="w-full py-4 border-b border-primary/10 focus:border-primary outline-none bg-transparent transition-colors font-serif italic text-xl"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="micro-label">Cake Size</label>
+                      <select className="w-full py-4 border-b border-primary/10 focus:border-primary outline-none bg-transparent transition-colors font-serif italic text-xl appearance-none">
+                        <option>6 inch (Small)</option>
+                        <option>8 inch (Medium)</option>
+                        <option>10 inch (Large)</option>
+                        <option>2-Tier Special</option>
+                      </select>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold text-accent mb-1">Cake Size</label>
-                    <select className="w-full p-3 rounded-xl border-2 border-primary focus:border-secondary outline-none bg-white">
-                      <option>6 inch (Small)</option>
-                      <option>8 inch (Medium)</option>
-                      <option>10 inch (Large)</option>
-                      <option>2-Tier Special</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-accent mb-1">Instructions / Theme</label>
+                  <div className="space-y-2">
+                    <label className="micro-label">Instructions / Theme</label>
                     <textarea 
-                      className="w-full p-3 rounded-xl border-2 border-primary focus:border-secondary outline-none h-24"
+                      className="w-full py-4 border-b border-primary/10 focus:border-primary outline-none bg-transparent transition-colors font-serif italic text-xl h-32 resize-none"
                       placeholder="Tell us about the theme, colors, or message..."
                     ></textarea>
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold text-accent mb-1">Upload Design (Optional)</label>
-                    <div className="border-2 border-dashed border-primary rounded-xl p-6 text-center hover:bg-primary/5 transition-colors cursor-pointer">
-                      <Upload className="mx-auto text-secondary mb-2" />
-                      <p className="text-xs text-gray-500">Click to upload or drag and drop image</p>
-                    </div>
+                  <div className="pt-4">
+                    <button 
+                      type="submit"
+                      className="btn-primary w-full"
+                    >
+                      Send Inquiry
+                    </button>
                   </div>
-                  <button 
-                    type="submit"
-                    className="w-full bg-secondary text-white py-4 rounded-full font-black text-lg shadow-lg hover:bg-accent transition-all uppercase cursor-pointer"
-                  >
-                    Request Quote
-                  </button>
                 </form>
               )}
             </div>
@@ -579,37 +605,52 @@ const CustomCakeSection = () => {
 };
 
 const AboutSection = () => (
-  <section id="about" className="py-16 bg-primary/10">
+  <section id="about" className="py-24 bg-white overflow-hidden relative">
+    {/* Decorative Vertical Text */}
+    <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:block">
+      <span className="vertical-text">Artisanal Quality • Locally Sourced • Family Owned</span>
+    </div>
+
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col md:flex-row items-center gap-12">
-        <div className="md:w-1/2">
-          <img 
-            src="https://picsum.photos/seed/bakery-store/800/600" 
-            alt="IKEA Cakes Store" 
-            className="rounded-3xl shadow-xl border-4 border-white"
-            referrerPolicy="no-referrer"
-          />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+        <div className="lg:col-span-5 relative">
+          <div className="aspect-[4/5] overflow-hidden">
+            <img 
+              src="https://picsum.photos/seed/bakery-store/1000/1250" 
+              alt="IKEA Cakes Store" 
+              className="w-full h-full object-cover grayscale-[0.2]"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+          <div className="absolute -bottom-10 -right-10 bg-primary p-12 text-paper hidden md:block">
+            <p className="text-5xl font-serif italic leading-none">30+</p>
+            <p className="micro-label text-paper/60 mt-2">Years of Tradition</p>
+          </div>
         </div>
-        <div className="md:w-1/2">
-          <h2 className="text-3xl md:text-5xl font-black text-accent uppercase mb-6">Our Story</h2>
-          <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            Serving Ormoc for many years, <span className="font-bold text-secondary">IKEA Cakes & Snacks</span> has become a beloved go-to spot 
-            for families celebrating life's sweetest moments. 
-          </p>
-          <p className="text-lg text-gray-700 leading-relaxed mb-8">
-            What started as a small local bakery has grown into a community favorite, 
-            known for our signature chocolate cakes, refreshing halo-halo, and 
-            comforting Filipino meals. We pride ourselves on using quality ingredients 
-            and traditional recipes that bring a smile to every customer.
-          </p>
-          <div className="grid grid-cols-2 gap-6">
-            <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
-              <p className="text-3xl font-black text-secondary">100%</p>
-              <p className="text-sm font-bold text-accent">Freshly Baked</p>
+        
+        <div className="lg:col-span-7">
+          <span className="micro-label mb-6 block">Our Heritage</span>
+          <h2 className="text-5xl md:text-7xl font-serif italic text-primary mb-10 leading-none">A Legacy of Taste</h2>
+          
+          <div className="space-y-8 text-accent/70">
+            <p className="text-xl leading-relaxed italic font-serif">
+              "Serving Ormoc for nearly three decades, IKEA Cakes & Snacks has been the silent guest at thousands of celebrations."
+            </p>
+            <p className="text-base leading-relaxed">
+              What started as a modest local bakery has blossomed into a community landmark. 
+              We remain committed to the traditional recipes that first made us famous—our 
+              unmistakable chocolate fudge and the refreshing layers of our signature halo-halo.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-primary/10 border border-primary/10 mt-16">
+            <div className="bg-white p-10">
+              <p className="text-4xl font-serif italic text-primary mb-2">100%</p>
+              <p className="micro-label">Artisanal Fresh</p>
             </div>
-            <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
-              <p className="text-3xl font-black text-secondary">Local</p>
-              <p className="text-sm font-bold text-accent">Ormoc Favorite</p>
+            <div className="bg-white p-10">
+              <p className="text-4xl font-serif italic text-primary mb-2">Ormoc</p>
+              <p className="micro-label">Born & Raised</p>
             </div>
           </div>
         </div>
@@ -619,38 +660,35 @@ const AboutSection = () => (
 );
 
 const ContactSection = () => (
-  <section id="contact" className="py-16 bg-white">
+  <section id="contact" className="py-24 bg-paper">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-5xl font-black text-accent uppercase">Visit Us</h2>
-        <p className="text-gray-500 mt-2">We have two convenient locations in Ormoc City</p>
+      <div className="flex flex-col items-center text-center mb-20">
+        <span className="micro-label mb-4">Find Us</span>
+        <h2 className="text-5xl md:text-7xl font-serif italic text-primary">Our Locations</h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-primary/10 border border-primary/10">
         {/* Branch 1 */}
-        <div className="card-yellow p-8 flex flex-col md:flex-row gap-6">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl font-black text-secondary mb-4">Main Branch</h3>
-            <div className="space-y-4 text-accent">
-              <div className="flex items-start space-x-3">
-                <MapPin className="flex-shrink-0 mt-1" />
-                <p className="font-medium">Bonifacio Street, Ormoc City, Leyte</p>
+        <div className="bg-white p-12 flex flex-col gap-12">
+          <div>
+            <h3 className="text-4xl font-serif italic text-primary mb-8">Main Branch</h3>
+            <div className="space-y-8">
+              <div className="flex items-start space-x-6">
+                <MapPin className="flex-shrink-0 mt-1 text-secondary" size={20} strokeWidth={1.5} />
+                <p className="text-accent/70 font-medium leading-relaxed">Bonifacio Street, Ormoc City, Leyte</p>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="flex-shrink-0" />
-                <p className="font-medium">(053) 561-XXXX</p>
+              <div className="flex items-center space-x-6">
+                <Phone className="flex-shrink-0 text-secondary" size={20} strokeWidth={1.5} />
+                <p className="text-accent/70 font-medium">(053) 561-XXXX</p>
               </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="flex-shrink-0" />
-                <p className="font-medium">8:00 AM - 8:00 PM</p>
+              <div className="flex items-center space-x-6">
+                <Clock className="flex-shrink-0 text-secondary" size={20} strokeWidth={1.5} />
+                <p className="text-accent/70 font-medium">8:00 AM - 8:00 PM</p>
               </div>
             </div>
-            <button className="mt-8 flex items-center space-x-2 bg-secondary text-white px-6 py-3 rounded-full font-bold hover:bg-accent transition-all cursor-pointer">
-              <MessageCircle size={20} />
-              <span>Chat on Messenger</span>
-            </button>
           </div>
-          <div className="md:w-1/2 h-48 md:h-auto bg-gray-200 rounded-2xl overflow-hidden">
+          
+          <div className="h-80 grayscale-[0.5] hover:grayscale-0 transition-all duration-1000 overflow-hidden">
              <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.475294524454!2d124.6041666!3d11.0027778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3307f0f6f6f6f6f7%3A0x1234567890abcdef!2sIKEA%20Cakes%20%26%20Snacks!5e0!3m2!1sen!2sph!4v1625000000000!5m2!1sen!2sph" 
                 width="100%" 
@@ -664,29 +702,26 @@ const ContactSection = () => (
         </div>
 
         {/* Branch 2 */}
-        <div className="card-yellow p-8 flex flex-col md:flex-row gap-6">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl font-black text-secondary mb-4">Robinsons Branch</h3>
-            <div className="space-y-4 text-accent">
-              <div className="flex items-start space-x-3">
-                <MapPin className="flex-shrink-0 mt-1" />
-                <p className="font-medium">Robinsons Place Ormoc, Leyte</p>
+        <div className="bg-white p-12 flex flex-col gap-12">
+          <div>
+            <h3 className="text-4xl font-serif italic text-primary mb-8">Robinsons Branch</h3>
+            <div className="space-y-8">
+              <div className="flex items-start space-x-6">
+                <MapPin className="flex-shrink-0 mt-1 text-secondary" size={20} strokeWidth={1.5} />
+                <p className="text-accent/70 font-medium leading-relaxed">Robinsons Place Ormoc, Leyte</p>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="flex-shrink-0" />
-                <p className="font-medium">(053) 561-YYYY</p>
+              <div className="flex items-center space-x-6">
+                <Phone className="flex-shrink-0 text-secondary" size={20} strokeWidth={1.5} />
+                <p className="text-accent/70 font-medium">(053) 561-YYYY</p>
               </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="flex-shrink-0" />
-                <p className="font-medium">10:00 AM - 9:00 PM</p>
+              <div className="flex items-center space-x-6">
+                <Clock className="flex-shrink-0 text-secondary" size={20} strokeWidth={1.5} />
+                <p className="text-accent/70 font-medium">10:00 AM - 9:00 PM</p>
               </div>
             </div>
-            <button className="mt-8 flex items-center space-x-2 bg-secondary text-white px-6 py-3 rounded-full font-bold hover:bg-accent transition-all cursor-pointer">
-              <MessageCircle size={20} />
-              <span>Chat on Messenger</span>
-            </button>
           </div>
-          <div className="md:w-1/2 h-48 md:h-auto bg-gray-200 rounded-2xl overflow-hidden">
+          
+          <div className="h-80 grayscale-[0.5] hover:grayscale-0 transition-all duration-1000 overflow-hidden">
              <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.475294524454!2d124.6041666!3d11.0027778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3307f0f6f6f6f6f7%3A0x1234567890abcdef!2sRobinsons%20Place%20Ormoc!5e0!3m2!1sen!2sph!4v1625000000000!5m2!1sen!2sph" 
                 width="100%" 
@@ -704,58 +739,57 @@ const ContactSection = () => (
 );
 
 const Footer = () => (
-  <footer className="bg-accent text-white py-12">
+  <footer className="bg-accent text-paper py-24">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-        <div className="col-span-1 md:col-span-2">
-          <div className="flex items-center mb-6">
-            <div className="bg-secondary p-2 rounded-lg mr-2">
-              <Cake className="text-primary w-6 h-6" />
-            </div>
-            <h2 className="text-2xl font-black uppercase tracking-tighter">IKEA Cakes & Snacks</h2>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-20">
+        <div className="md:col-span-6">
+          <div className="flex flex-col items-start mb-10">
+            <span className="font-serif italic text-4xl text-paper leading-none tracking-tighter lowercase">Ikea</span>
+            <span className="micro-label text-paper/40 -mt-1">Cakes & Snacks</span>
           </div>
-          <p className="text-gray-300 max-w-md mb-6">
-            Ormoc's favorite destination for fresh cakes, snacks, and Filipino comfort food. 
-            Celebrating life's sweetest moments with you since many years.
+          <p className="text-paper/50 max-w-md mb-10 leading-relaxed font-medium">
+            Ormoc's premier destination for artisanal cakes and Filipino comfort. 
+            Crafting sweet traditions since 1994 with locally sourced ingredients 
+            and family recipes.
           </p>
-          <div className="flex space-x-4">
-            <a href="#" className="bg-white/10 p-3 rounded-full hover:bg-secondary transition-colors">
-              <Facebook size={20} />
+          <div className="flex space-x-6">
+            <a href="#" className="text-paper/40 hover:text-secondary transition-colors">
+              <Facebook size={20} strokeWidth={1.5} />
             </a>
-            <a href="#" className="bg-white/10 p-3 rounded-full hover:bg-secondary transition-colors">
-              <MessageCircle size={20} />
+            <a href="#" className="text-paper/40 hover:text-secondary transition-colors">
+              <MessageCircle size={20} strokeWidth={1.5} />
             </a>
           </div>
         </div>
         
-        <div>
-          <h3 className="text-lg font-bold mb-6 text-primary">Quick Links</h3>
-          <ul className="space-y-4 text-gray-300">
-            <li><a href="#home" className="hover:text-white">Home</a></li>
-            <li><a href="#menu" className="hover:text-white">Menu</a></li>
-            <li><a href="#custom" className="hover:text-white">Custom Cakes</a></li>
-            <li><a href="#about" className="hover:text-white">Our Story</a></li>
+        <div className="md:col-span-3">
+          <h3 className="micro-label text-paper mb-8">Navigation</h3>
+          <ul className="space-y-4 text-paper/40 text-sm font-bold uppercase tracking-widest">
+            <li><a href="#home" className="hover:text-paper transition-colors">Home</a></li>
+            <li><a href="#menu" className="hover:text-paper transition-colors">Menu</a></li>
+            <li><a href="#custom" className="hover:text-paper transition-colors">Custom Cakes</a></li>
+            <li><a href="#about" className="hover:text-paper transition-colors">Our Story</a></li>
           </ul>
         </div>
 
-        <div>
-          <h3 className="text-lg font-bold mb-6 text-primary">Contact</h3>
-          <ul className="space-y-4 text-gray-300">
-            <li className="flex items-center space-x-3">
-              <Phone size={16} />
+        <div className="md:col-span-3">
+          <h3 className="micro-label text-paper mb-8">Contact</h3>
+          <ul className="space-y-6 text-paper/40 text-sm font-medium">
+            <li className="flex items-start space-x-4">
+              <Phone size={16} strokeWidth={1.5} className="mt-1" />
               <span>(053) 561-XXXX</span>
             </li>
-            <li className="flex items-center space-x-3">
-              <MapPin size={16} />
-              <span>Ormoc City, Leyte</span>
+            <li className="flex items-start space-x-4">
+              <MapPin size={16} strokeWidth={1.5} className="mt-1" />
+              <span>Bonifacio Street, <br />Ormoc City, Leyte</span>
             </li>
           </ul>
         </div>
       </div>
       
-      <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-        <p>© 2026 IKEA Cakes & Snacks Ormoc. All rights reserved.</p>
-        <p className="mt-2">Designed with ❤️ for Ormoc Locals.</p>
+      <div className="pt-12 border-t border-paper/5 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="micro-label text-paper/20">© 2026 IKEA Cakes & Snacks Ormoc. All rights reserved.</p>
+        <p className="micro-label text-paper/20 italic font-serif lowercase tracking-normal">Crafted with tradition</p>
       </div>
     </div>
   </footer>
@@ -813,14 +847,17 @@ export default function App() {
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
-            className="bg-secondary text-white text-center py-2 px-4 text-sm font-bold relative z-[60]"
+            className="bg-primary text-paper text-center py-3 px-4 relative z-[60]"
           >
-            🎉 Birthday Cake Packages available! Order 3 days in advance.
+            <span className="micro-label text-paper/80">Special Announcement</span>
+            <p className="text-xs font-bold uppercase tracking-widest mt-1">
+              🎉 Birthday Cake Packages available! Order 3 days in advance.
+            </p>
             <button 
               onClick={() => setShowPromo(false)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 hover:text-primary cursor-pointer"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-paper/40 hover:text-paper cursor-pointer"
             >
-              <X size={16} />
+              <X size={14} />
             </button>
           </motion.div>
         )}
@@ -851,11 +888,11 @@ export default function App() {
       <div className="fixed bottom-6 right-6 z-40 md:hidden">
         <button 
           onClick={() => setIsCartOpen(true)}
-          className="bg-secondary text-white p-4 rounded-full shadow-2xl flex items-center justify-center animate-pulse cursor-pointer"
+          className="bg-primary text-paper p-5 rounded-full shadow-2xl flex items-center justify-center cursor-pointer border border-paper/10"
         >
-          <ShoppingBag size={24} />
+          <ShoppingBag size={24} strokeWidth={1.5} />
           {cartCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-primary text-accent text-xs font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-secondary">
+            <span className="absolute -top-2 -right-2 bg-secondary text-primary text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-paper">
               {cartCount}
             </span>
           )}
@@ -881,7 +918,8 @@ export default function App() {
         onUpdateQuantity={updateQuantity}
         onRemove={removeFromCart}
         onCheckout={() => {
-          alert('Checkout feature coming soon! Please visit our store or message us on Facebook to complete your order.');
+          // In a real app, this would redirect to a checkout page
+          console.log('Proceeding to checkout...');
           setIsCartOpen(false);
         }}
       />
